@@ -7,3 +7,7 @@ class CarController:
             return CarRepository().store(data)
         except Exception:
             return 'Missing Params', 422
+
+    def findById(self, id):
+        return CarRepository().findById(id)
+        

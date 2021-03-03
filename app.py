@@ -1,29 +1,20 @@
-from flask import Flask
-from elasticsearch import Elasticsearch
-import os
+from flask import Flask, request
+from src.controller.car_controller import CarController
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():
-    es = Elasticsearch(
-        [os.getenv("HOST")],
-        http_auth=(
-            os.getenv("USER"), 
-            os.getenv("PASS")
-        ),
-        scheme="https",
-        port=443,
-    )
+@app.route('/car', methods=["POST"])
+def car():
+    data = request.json
+    car_controller = CarController()
+    return car_controller.store(data)
 
-    car = {
-        "modelo": "chevete do xostack",
-        "placa": "XOS-1814"
-    }
 
-    es.index(index='cars', id=1, body=car)
-    return 'Hello, World!'
+@app.route('/car/<id>', methods=["GET"])
+def find(id):
+    car_controller = CarController()
+    return car_controller.findById(id)
 
 
 if __name__ == '__main__':
